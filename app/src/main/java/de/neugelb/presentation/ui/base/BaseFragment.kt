@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import de.neugelb.R
 import de.neugelb.domain.error.ErrorType
 import de.neugelb.domain.usecase.Error
 import de.neugelb.presentation.ui.extensions.observe
@@ -26,7 +27,7 @@ abstract class BaseFragment : Fragment() {
             Toast.makeText(requireContext(), "${error.type.code}", Toast.LENGTH_SHORT).show()
         }
         is ErrorType.TimeoutError -> {
-            Toast.makeText(requireContext(), "Something went wrong, please try again", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), requireContext().getString(R.string.general_network_error), Toast.LENGTH_SHORT).show()
         }
         else -> {
 

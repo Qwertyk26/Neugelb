@@ -18,6 +18,11 @@ class MoviesAdapter(var results: ArrayList<Result>) :
         notifyItemRangeInserted(oldSize, results.size - oldSize)
     }
 
+    fun clear() {
+        results.clear()
+        notifyDataSetChanged()
+    }
+
     inner class ViewHolder(private val binding: ItemMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -27,7 +32,7 @@ class MoviesAdapter(var results: ArrayList<Result>) :
                 .into(posterImage)
             movieTitle.text = result.originalTitle
             this@ViewHolder.itemView.setOnClickListener {
-                onItemClick?.invoke(result)
+                onItemClick.invoke(result)
             }
         }
     }

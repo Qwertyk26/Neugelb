@@ -10,7 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="?attr/colorPrimaryVariant"/>
+        android:background="?attr/colorPrimaryVariant">
+        <EditText
+            android:id="@+id/search_et"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/white"
+            android:maxLines="1"
+            android:inputType="text"
+            android:textColorHint="@color/white"
+            android:hint="@string/search_hint"/>
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

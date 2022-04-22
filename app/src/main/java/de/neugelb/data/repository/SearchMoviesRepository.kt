@@ -1,10 +1,10 @@
 package de.neugelb.data.repository
 
 import de.neugelb.domain.entity.response.Result
-import de.neugelb.domain.repository.IMoviesRepository
+import de.neugelb.domain.repository.ISearchMoviesRepository
 
-class SearchMoviesRepository(): IMoviesRepository {
-    override suspend fun getMovies(page: Int): List<Result>? {
-        TODO("Not yet implemented")
+class SearchMoviesRepository : AbstractRepository(), ISearchMoviesRepository {
+    override suspend fun searchMovies(page: Int, query: String): List<Result>? {
+        return server.searchMovie(page, query).results
     }
 }

@@ -8,7 +8,7 @@ import de.neugelb.presentation.ui.base.BaseViewModel
 class MovieViewModel(private val getMoviesUseCase: GetMoviesUseCase) : BaseViewModel() {
 
     val moviesList = MutableLiveData<List<Result>>()
-    private var page = 1
+    var page = 1
 
     fun getMovies() = doInBackground {
         getMoviesUseCase.getMovies(page).doOnSuccess {

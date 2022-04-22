@@ -1,15 +1,26 @@
 package de.neugelb.presentation.ui.movies
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import de.neugelb.R
 import de.neugelb.presentation.ui.base.BaseFragment
 import de.neugelb.presentation.ui.base.listener.RecyclerScrollListener
+import de.neugelb.presentation.ui.extensions.hideKeyboard
 import de.neugelb.presentation.ui.movies.adapter.MoviesAdapter
 import kotlinx.android.synthetic.main.fragment_movies.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -17,6 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MovieFragment : BaseFragment() {
 
     override val viewModel by viewModel<MovieViewModel>()
+    private val searchMovieView by viewModel<SearchMovieViewModel>()
     private lateinit var moviesAdapter: MoviesAdapter
     private var onScrollListener: RecyclerScrollListener? = null
 
@@ -46,9 +58,35 @@ class MovieFragment : BaseFragment() {
         }
         recycler_view.adapter = moviesAdapter
         onScrollListener = RecyclerScrollListener(layoutManager) {
-            viewModel.getMovies()
+            if (search_et.text.toString().isEmpty()) {
+                viewModel.getMovies()
+            } else {
+                searchMovieView.searchMoreMovies("${search_et.text}")
+            }
         }.also {
             recycler_view.addOnScrollListener(it)
+        }
+        recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState != RecyclerView.SCROLL_STATE_IDLE) {
+                    if (search_et.hasFocus()) {
+                        search_et.clearFocus()
+                        hideKeyboard()
+                    }
+                }
+            }
+        })
+        search_et.doAfterTextChanged {
+            if (it.toString().isEmpty()) {
+                moviesAdapter.clear()
+                progress_bar.isVisible = false
+                moviesAdapter.addList(viewModel.moviesList.value ?: arrayListOf())
+            } else {
+                progress_bar.isVisible = true
+                moviesAdapter.clear()
+                searchMovieView.searchMovie("$it", 1)
+            }
         }
     }
 
@@ -59,5 +97,17 @@ class MovieFragment : BaseFragment() {
                 moviesAdapter.addList(movies)
             }
         }
+        searchMovieView.searchList.observe(viewLifecycleOwner) { searchList ->
+            if (searchList.isNullOrEmpty().not()) {
+                progress_bar.isGone = true
+                moviesAdapter.addList(searchList)
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.moviesList.removeObservers(this)
+        searchMovieView.searchList.removeObservers(this)
     }
 }
