@@ -1,23 +1,17 @@
 package de.neugelb.presentation.ui.movies
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
-import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import de.neugelb.R
+import de.neugelb.databinding.FragmentMoviesBinding
 import de.neugelb.presentation.ui.base.BaseFragment
 import de.neugelb.presentation.ui.base.listener.RecyclerScrollListener
 import de.neugelb.presentation.ui.extensions.hideKeyboard
@@ -31,13 +25,15 @@ class MovieFragment : BaseFragment() {
     private val searchMovieView by viewModel<SearchMovieViewModel>()
     private lateinit var moviesAdapter: MoviesAdapter
     private var onScrollListener: RecyclerScrollListener? = null
+    private lateinit var binding: FragmentMoviesBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_movies, container, false)
+    ): View {
+        binding = FragmentMoviesBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

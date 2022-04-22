@@ -4,20 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import de.neugelb.R
+import de.neugelb.databinding.FragmentDetailMovieBinding
 import de.neugelb.domain.entity.response.Result
-import de.neugelb.presentation.ui.base.BaseFragment
-import de.neugelb.presentation.ui.base.BaseViewModel
-import de.neugelb.presentation.ui.base.EmptyViewModel
 import kotlinx.android.synthetic.main.fragment_detail_movie.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MovieDetailFragment : BottomSheetDialogFragment() {
 
     private var movieItem: Result? = null
+    private lateinit var binding: FragmentDetailMovieBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +25,9 @@ class MovieDetailFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_detail_movie, container, false)
+    ): View {
+        binding = FragmentDetailMovieBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
